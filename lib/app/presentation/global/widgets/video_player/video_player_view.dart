@@ -5,6 +5,8 @@ import 'package:video_player/video_player.dart';
 import '../../../../domain/models/video.dart';
 import '../../blocs/video_player/video_player_bloc.dart';
 import '../../blocs/video_player/video_player_state.dart';
+import 'widgets/controls/video_player_controls.dart';
+import 'widgets/video_player_error.dart';
 
 class VideoPlayerView extends StatelessWidget {
   const VideoPlayerView({super.key, required this.video});
@@ -24,16 +26,13 @@ class VideoPlayerView extends StatelessWidget {
             loading: (_) => const Center(
               child: CircularProgressIndicator(),
             ),
-            failed: (_) => Column(
+            failed: (_) => const VideoPlayerError(),
+            loaded: (_) => Stack(
               children: [
-                const Text(
-                  'Error',
-                  style: TextStyle(color: Colors.white),
-                ),
-                ElevatedButton(onPressed: bloc.init, child: const Text('Retry'))
+                VideoPlayer(bloc.controller),
+                const VideoPlayerControls(),
               ],
-            ),
-            loaded: (_) => VideoPlayer(bloc.controller),
+            )
           );
         },
       ),
