@@ -17,23 +17,25 @@ class VideoPlayerView extends StatelessWidget {
     return Container(
       color: Colors.black,
       child: ChangeNotifierProvider<VideoPlayerBloc>(
-        create: (_) => VideoPlayerBloc(VideoPlayerState.loading(),
-            controller: VideoPlayerController.network(video.src))
-          ..init(),
+        create: (_) => VideoPlayerBloc(
+          VideoPlayerState.loading(),
+          controller: VideoPlayerController.networkUrl(
+            Uri.parse(video.src),
+          ),
+        )..init(),
         builder: (context, _) {
           final VideoPlayerBloc bloc = context.watch();
           return bloc.value.map(
-            loading: (_) => const Center(
-              child: CircularProgressIndicator(),
-            ),
-            failed: (_) => const VideoPlayerError(),
-            loaded: (_) => Stack(
-              children: [
-                VideoPlayer(bloc.controller),
-                const VideoPlayerControls(),
-              ],
-            )
-          );
+              loading: (_) => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+              failed: (_) => const VideoPlayerError(),
+              loaded: (_) => Stack(
+                    children: [
+                      VideoPlayer(bloc.controller),
+                      const VideoPlayerControls(),
+                    ],
+                  ));
         },
       ),
     );
